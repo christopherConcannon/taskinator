@@ -33,6 +33,11 @@ header p {
   font-size: 2rem;
 }
 
+main {
+  display: flex;
+  padding-bottom: 25px;
+}
+
 p,
 li {
   font-size: 1.6rem;
@@ -223,6 +228,11 @@ footer {
 
   form .form-group button {
     width: 100%;
+  }
+
+  main {
+    display: block;
+    
   }
 
   .task-list-wrapper {
