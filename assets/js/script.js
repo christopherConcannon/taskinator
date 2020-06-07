@@ -45,6 +45,7 @@ var createTaskEl = function(taskDataObj) {
 
 	// add task id as a custom attributre
 	listItemEl.setAttribute('data-task-id', taskIdCounter);
+	listItemEl.setAttribute('draggable', 'true');
 
 	// create div to hold task info and add to list item
 	var taskInfoEl = document.createElement('div');
@@ -90,7 +91,7 @@ var createTaskActions = function(taskId) {
 
 	actionContainerEl.appendChild(deleteButtonEl);
 
-  // create select input
+	// create select input
 	var statusSelectEl = document.createElement('select');
 	statusSelectEl.className = 'select-status';
 	statusSelectEl.setAttribute('name', 'status-change');
@@ -166,25 +167,25 @@ var completeEditTask = function(taskName, taskType, taskId) {
 };
 
 var taskStatusChangeHandler = function(event) {
-  // console.log(event.target);
-  // get the task item's id
-  var taskId = event.target.getAttribute("data-task-id");
+	// console.log(event.target);
+	// get the task item's id
+	var taskId = event.target.getAttribute('data-task-id');
 
-  // get the currently selected option's value and convert to lowercase
-  var statusValue = event.target.value.toLowerCase();
+	// get the currently selected option's value and convert to lowercase
+	var statusValue = event.target.value.toLowerCase();
 
-  // find the parent task item element based on the id
-  var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+	// find the parent task item element based on the id
+	var taskSelected = document.querySelector(
+		".task-item[data-task-id='" + taskId + "']"
+	);
 
-  if (statusValue === "to do") {
-    tasksToDoEl.appendChild(taskSelected);
-  }
-  else if (statusValue === "in progress") {
-    tasksInProgressEl.appendChild(taskSelected);
-  }
-  else if (statusValue === "completed") {
-    tasksCompletedEl.appendChild(taskSelected);
-  }
+	if (statusValue === 'to do') {
+		tasksToDoEl.appendChild(taskSelected);
+	} else if (statusValue === 'in progress') {
+		tasksInProgressEl.appendChild(taskSelected);
+	} else if (statusValue === 'completed') {
+		tasksCompletedEl.appendChild(taskSelected);
+	}
 };
 
 var deleteTask = function(taskId) {
@@ -194,11 +195,48 @@ var deleteTask = function(taskId) {
 	taskSelected.remove();
 };
 
+var dragTaskHandler = function(event) {
+	var taskId = event.target.getAttribute('data-task-id');
+  event.dataTransfer.setData("text/plain", taskId);
+  var getId = event.dataTransfer.getData("text/plain");
+  console.log("getId: ", getId, typeof getId);
+};
+
+var dropZoneDragHandler = function(event) {
+  var taskListEl = event.target.closest('.task-list');
+  if(taskListEl) {
+    event.preventDefault();
+  }
+}
+
+var dropTaskHandler = function(event) {
+  var id = event.dataTransfer.getData('text/plain');
+  var draggableElement = document.querySelector("[data-task-id='" + id + "']");
+  var dropZoneEl = event.target.closest('.task-list');
+  var statusType = dropZoneEl.id;
+  // set status of task based on dropZone id
+  var statusSelectEl = draggableElement.querySelector("select[name='status-change']");
+  if (statusType === 'tasks-to-do') {
+    statusSelectEl.selectedIndex = 0;
+  } else if (statusType === 'tasks-in-progress') {
+    statusSelectEl.selectedIndex = 1;
+  } else if (statusType === 'tasks-completed') {
+    statusSelectEl.selectedIndex = 2;
+  }
+
+  dropZoneEl.appendChild(draggableElement);
+}
+
 pageContentEl.addEventListener('click', taskButtonHandler);
 formEl.addEventListener('submit', taskFormHandler);
 pageContentEl.addEventListener('change', taskStatusChangeHandler);
+pageContentEl.addEventListener('dragstart', dragTaskHandler);
+pageContentEl.addEventListener('dragover', dropZoneDragHandler);
+pageContentEl.addEventListener('drop', dropTaskHandler);
 
 // QUESTIONS
 // why do we return false on line 15? instead of just return.
 
 // why aren't we resetting task type select to default on submit?
+
+// if you have more than one draggable element type, how do you associate the correct dataTransfer property to the type in question, since the key of the reference is a generic data type ('text/plain') rather than a unique string?
