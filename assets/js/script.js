@@ -187,12 +187,9 @@ var completeEditTask = function(taskName, taskType, taskId) {
 
 	formEl.removeAttribute('data-task-id');
 	document.querySelector('#save-task').textContent = 'Add Task';
-
-	// alert("Task Updated");
 };
 
 var taskStatusChangeHandler = function(event) {
-	// console.log(event.target);
 	// get the task item's id
 	var taskId = event.target.getAttribute('data-task-id');
 
@@ -245,8 +242,7 @@ var deleteTask = function(taskId) {
 var dragTaskHandler = function(event) {
 	var taskId = event.target.getAttribute('data-task-id');
 	event.dataTransfer.setData('text/plain', taskId);
-	var getId = event.dataTransfer.getData('text/plain');
-	console.log('getId: ', getId, typeof getId);
+	
 };
 
 var dropZoneDragHandler = function(event) {
@@ -261,7 +257,7 @@ var dropZoneDragHandler = function(event) {
 };
 
 var dropTaskHandler = function(event) {
-	var id = event.dataTransfer.getData('text/plain');
+  var id = event.dataTransfer.getData('text/plain');
 	var draggableElement = document.querySelector("[data-task-id='" + id + "']");
 	var dropZoneEl = event.target.closest('.task-list');
 	var statusType = dropZoneEl.id;
@@ -317,8 +313,8 @@ var loadTasks = function() {
 	}
 };
 
-pageContentEl.addEventListener('click', taskButtonHandler);
 formEl.addEventListener('submit', taskFormHandler);
+pageContentEl.addEventListener('click', taskButtonHandler);
 pageContentEl.addEventListener('change', taskStatusChangeHandler);
 pageContentEl.addEventListener('dragstart', dragTaskHandler);
 pageContentEl.addEventListener('dragover', dropZoneDragHandler);
