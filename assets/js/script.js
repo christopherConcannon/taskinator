@@ -290,45 +290,19 @@ var saveTasks = function() {
 
 var loadTasks = function() {
   // Get task items from localStorage
-  if (localStorage.getItem('tasks') === null) {
-    tasks = [];
+  var savedTasks = localStorage.getItem('tasks')
+  if (!savedTasks) {
     return false;
   } 
-    
-  tasks = JSON.parse(localStorage.getItem('tasks'));
-  console.log(tasks);
 
-  for (i = 0; i < tasks.length; i++) {
-    tasks[i].id === taskIdCounter;
+  // Convert tasks from stringified format back into array of objects  
+  savedTasks = JSON.parse(savedTasks);
 
-    var listItemEl = document.createElement('li');
-    listItemEl.className = 'task-item';
-    listItemEl.setAttribute('data-task-id', tasks[i].id);
-    listItemEl.setAttribute('draggable', 'true');
-
-    var taskInfoEl = document.createElement('div');
-    taskInfoEl.className = 'task-info';
-    taskInfoEl.innerHTML = "<h3 class='task-name'>" + tasks[i].name + "</h3><span class='task-type'>" + tasks[i].type + "</span>";
-    listItemEl.appendChild(taskInfoEl);
-    
-    var tasksActionEl = createTaskActions(tasks[i].id);
-    listItemEl.appendChild(tasksActionEl);
-
-    if (tasks[i].status === 'to do') {
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 0;
-      tasksToDoEl.appendChild(listItemEl);
-    } else if (tasks[i].status === 'in progress') {
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 1;
-      tasksInProgressEl.appendChild(listItemEl);
-    } else if (tasks[i].status === 'completed') {
-      listItemEl.querySelector("select[name='status-change']").selectedIndex = 2;
-      tasksCompletedEl.appendChild(listItemEl);
-    }
-    taskIdCounter++;
+  // Iterate through savedTasks array and pass each object to createTaskEl to create task elements on page from array data
+  for (var i = 0; i < savedTasks.length; i++) {
+    // pass each object into the createTaskEl() function
+    createTaskEl(savedTasks[i]);
   }
-  
-  // Convert tasks from stringified format back into array of objects
-  // Iterate through task array and create task elements on page from array data
 }
 
 pageContentEl.addEventListener('click', taskButtonHandler);
@@ -341,10 +315,5 @@ pageContentEl.addEventListener('dragleave', dragLeaveHandler);
 
 loadTasks();
 
-// QUESTIONS
-// why do we return false on line 15? instead of just return.
 
-// why aren't we resetting task type select to default on submit?
-
-// if you have more than one draggable element type, how do you associate the correct dataTransfer property to the type in question, since the key of the reference is a generic data type ('text/plain') rather than a unique string?
 
