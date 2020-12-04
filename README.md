@@ -3,7 +3,7 @@
 ![MIT license badge](https://img.shields.io/badge/license-MIT-green)
 
 ## Description
-A Kanban style task tracking application featuring drag and drop functionality, which allows user to track the current state of the task at hand.
+A Kanban style task tracking application featuring drag and drop functionality, which allows user to track the current state of the task at hand.  Local Storage is used to allow tasks to persist on page reload.
 
 ##### Taskinator View
 ![Taskinator View Screenshot](./assets/images/screenshot.png)
